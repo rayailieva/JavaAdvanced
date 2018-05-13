@@ -4,15 +4,14 @@ import java.util.Scanner;
 public class p04_EuroTrip {
     public static void main(String[] args) {
 
-        Scanner scanner = new Scanner(System.in);
+       Scanner scanner = new Scanner(System.in);
 
-        double quantity = Double.parseDouble(scanner.nextLine());
-        double pricePerKilo = 1.20;
+       double quantity = scanner.nextDouble();
 
-        BigDecimal priceInLevs = new BigDecimal(pricePerKilo * quantity);
-        BigDecimal exchangeRate = new BigDecimal("4210500000000");
-        BigDecimal marksNeeded = exchangeRate.multiply(priceInLevs);
+       double inLevs = quantity * 1.20;
 
-        System.out.printf("%.2f marks", marksNeeded);
+       BigDecimal marks = new BigDecimal("4210500000000").multiply(new BigDecimal(inLevs));
+
+        System.out.printf("%.2f marks", marks);
     }
 }

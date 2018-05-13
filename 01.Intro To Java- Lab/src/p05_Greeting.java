@@ -15,11 +15,8 @@ public class p05_Greeting {
         if(secondName.isEmpty()){
             secondName = "*****";
         }
-        else{
-            System.out.printf("Hello, %s %s!", firstName, secondName);
-        }
+
+        System.out.printf("Hello, %s %s !", firstName, secondName);
 
     }
-
-
 }
