@@ -8,15 +8,13 @@ public class p01CountOccurrences {
         String text = scanner.nextLine().toLowerCase();
         String word = scanner.nextLine().toLowerCase();
 
-        int count = 0;
+        int counter = 0;
         int index = text.indexOf(word);
 
         while (index != -1) {
-            count++;
+            counter++;
             index = text.indexOf(word, index + 1);
         }
-
-        System.out.println(count);
-
+        System.out.println(counter);
     }
 }
