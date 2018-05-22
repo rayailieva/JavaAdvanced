@@ -16,6 +16,23 @@ public class p05MaximalSum {
 
         initializeMatrix(matrix);
 
+        printMatrixWithBiggestSum(matrix);
+
+    }
+
+    private static void initializeMatrix(int[][] matrix) {
+        for (int row = 0; row < matrix.length; row++) {
+
+            int[] inputLineNumbers = Arrays.stream(scanner.nextLine().split("\\s+"))
+                    .mapToInt(Integer::parseInt).toArray();
+
+            for (int col = 0; col < matrix[row].length; col++) {
+                matrix[row][col] = inputLineNumbers[col];
+            }
+        }
+    }
+
+    private static void printMatrixWithBiggestSum(int[][] matrix){
         int biggestSum = Integer.MIN_VALUE;
         int sum;
 
@@ -32,18 +49,5 @@ public class p05MaximalSum {
         }
 
         System.out.println(biggestSum);
-
-    }
-
-    private static void initializeMatrix(int[][] matrix) {
-        for (int row = 0; row < matrix.length; row++) {
-
-            int[] inputLineNumbers = Arrays.stream(scanner.nextLine().split("\\s+"))
-                    .mapToInt(Integer::parseInt).toArray();
-
-            for (int col = 0; col < matrix[row].length; col++) {
-                matrix[row][col] = inputLineNumbers[col];
-            }
-        }
     }
 }

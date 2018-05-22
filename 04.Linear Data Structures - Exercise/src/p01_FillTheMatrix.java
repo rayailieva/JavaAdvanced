@@ -33,10 +33,10 @@ public class p01_FillTheMatrix {
         }
     }
 
-    private static void fillMatrixA(int[][] matrix){
+    private static void fillMatrixA(int[][] matrix) {
         int num = 1;
-        for(int col = 0; col < matrix.length; col++){
-            for(int row = 0; row < matrix.length; row++){
+        for (int col = 0; col < matrix.length; col++) {
+            for (int row = 0; row < matrix[0].length; row++) {
                 matrix[row][col] = num;
                 num++;
             }
@@ -44,15 +44,15 @@ public class p01_FillTheMatrix {
     }
 
     private static void fillMatrixB(int[][] matrix){
-        int num = 1;
-        for(int col = 0; col < matrix.length; col++){
-            for(int row = 0; row < matrix[col].length; row++){
-                matrix[row][col] = num++;
-
-            }
-            if (++col < matrix.length) {
-                for (int row = matrix.length - 1; row >= 0; row--) {
-                    matrix[row][col] = num++;
+        int number = 1;
+        for (int row = 0; row < matrix.length; row++) {
+            if (row % 2 == 0) {
+                for (int col = 0; col < matrix[row].length; col++) {
+                    matrix[col][row] = number++;
+                }
+            } else {
+                for (int col = matrix[row].length - 1; col >= 0 ; col--) {
+                    matrix[col][row] = number++;
                 }
             }
         }
