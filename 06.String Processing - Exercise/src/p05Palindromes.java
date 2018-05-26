@@ -5,21 +5,20 @@ import java.util.TreeSet;
 public class p05Palindromes {
     public static void main(String[] args) {
 
-        Scanner scanner = new Scanner(System.in);
-        String[] text = scanner.nextLine().split("[ !?.,]");
+       Scanner scanner = new Scanner(System.in);
 
-        Set<String> palindromes = new TreeSet<>();
+       Set<String> palindromes = new TreeSet<>();
 
-        for(String word: text){
-            StringBuilder current = new StringBuilder(word);
-            current.reverse();
+       String[] words = scanner.nextLine().split("[,?!. ]");
 
-            if (word.equals(current.toString()) && !word.equals("")) {
-                palindromes.add(word);
-            }
-        }
+       for(String word : words){
+           StringBuilder sb = new StringBuilder(word);
+           sb.reverse();
+           if(word.equals(sb.toString()) && !word.equals("")){
+               palindromes.add(word);
+           }
+       }
 
         System.out.println(palindromes);
-
     }
 }

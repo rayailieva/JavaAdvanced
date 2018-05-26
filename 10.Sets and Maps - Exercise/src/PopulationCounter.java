@@ -1,42 +1,74 @@
 import java.util.LinkedHashMap;
+import java.util.Map;
 import java.util.Scanner;
+import java.util.stream.Collectors;
 
 public class PopulationCounter {
     public static void main(String[] args) {
 
         Scanner scanner = new Scanner(System.in);
 
-        LinkedHashMap<String, LinkedHashMap<String,Long>> result = new LinkedHashMap<>();
+        LinkedHashMap<String, LinkedHashMap<String,Long>> countries = new LinkedHashMap<>();
 
         String command = scanner.nextLine();
 
         while (!command.equals("report")){
 
             String[] tokens = command.split("\\|");
-            String city = tokens[0];
-            String country = tokens[1];
+            String cityName = tokens[0];
+            String countryName = tokens[1];
             long population = Long.parseLong(tokens[2]);
 
-            if(!result.containsKey(country)){
-                result.put(country, new LinkedHashMap<>());
+            LinkedHashMap<String, Long> cities = new LinkedHashMap<>();
+
+            if(countries.containsKey(countryName)){
+                cities = countries.get(countryName);
             }
-            if(!result.get(country).containsKey(city)){
-                result.get(country).put(city,population);
-            }
+
+            cities.put(cityName, population);
+            countries.put(countryName, cities);
 
             command = scanner.nextLine();
         }
 
-        result.entrySet().stream()
-                .sorted((country1, country2) -> country2.getValue().values().stream().reduce(0L, Long::sum)
-                        .compareTo(country1.getValue().values().stream().reduce(0L, Long::sum)))
-                .forEach(country -> {
-                    System.out.printf("%s (total population: %d)%n", country.getKey(),
-                            country.getValue().values().stream().reduce(0L, Long::sum));
-                    country.getValue().entrySet().stream()
-                            .sorted((city1, city2) -> city2.getValue().compareTo(city1.getValue()))
-                            .forEach(city -> System.out.printf("=>%s: %d%n", city.getKey(), city.getValue()));
-                });
+        Map<String, Map<String, Long>> sortedCountries =
+                countries.entrySet().stream()
+                .sorted((country1, country2) -> {
+                    long populationCountry1 =
+                            country1.getValue()
+                                    .values()
+                                    .stream()
+                                    .mapToLong(Long::valueOf)
+                                    .sum();
+                    long populationCountry2 =
+                            country2.getValue()
+                                    .values()
+                                    .stream()
+                                    .mapToLong(Long::valueOf)
+                                    .sum();
+                    int comparator = Long.compare(populationCountry2, populationCountry1);
+                    return comparator;
+                })
+                        .collect(Collectors.toMap(Map.Entry::getKey, Map.Entry::getValue, (a, b) -> a, LinkedHashMap::new));
+
+        for (var country : sortedCountries.entrySet()){
+
+            String citiesResult = "";
+            long totalPopulation = 0;
+
+            Map<String, Long> cities = country.getValue();
+            Map<String, Long> sortedCities = cities.entrySet().stream()
+                    .sorted((a, b) -> Long.compare(b.getValue(), a.getValue()))
+                    .collect(Collectors.toMap(Map.Entry::getKey, Map.Entry::getValue, (a, b) -> a, LinkedHashMap::new));
+
+            for(var city : sortedCities.entrySet()){
+
+                citiesResult += "=>" + city.getKey() + ": " + city.getValue() + "\n";
+                totalPopulation += city.getValue();
+            }
+            System.out.printf("%s (total population: %d)\n", country.getKey(), totalPopulation);
+            System.out.print(citiesResult);
+        }
 
     }
 }

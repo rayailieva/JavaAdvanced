@@ -9,11 +9,12 @@ public class p03TextFilter {
         String text = scanner.nextLine();
 
         for (String banned : bannedWords) {
-            if (text.contains(banned)) {
+            if(text.contains(banned)){
                 String replacement = new String(new char[banned.length()]).replace("\0", "*");
-                text = text.replaceAll(banned, replacement);
+                text = text.replaceAll(banned,replacement);
             }
         }
+
         System.out.println(text);
     }
 }
