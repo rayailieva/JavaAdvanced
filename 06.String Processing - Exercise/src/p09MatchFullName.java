@@ -8,7 +8,7 @@ public class p09MatchFullName {
 
         String line = scanner.nextLine();
 
-        String regex = ("^[A-Z][a-z]{2,} [A-Z][a-z]{2,}$");
+        String regex = ("^[A-Z][a-z]{2,}[ ]{1}[A-Z][a-z]{2,}$");
 
         while(!line.equals("end")){
 

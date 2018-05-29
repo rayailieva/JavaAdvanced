@@ -4,17 +4,12 @@ public class p03TextFilter {
     public static void main(String[] args) {
 
         Scanner scanner = new Scanner(System.in);
-
         String[] bannedWords = scanner.nextLine().split(", ");
         String text = scanner.nextLine();
 
-        for (String banned : bannedWords) {
-            if(text.contains(banned)){
-                String replacement = new String(new char[banned.length()]).replace("\0", "*");
-                text = text.replaceAll(banned,replacement);
-            }
+        for (String bannedWord : bannedWords) {
+            text = text.replaceAll(bannedWord, new String(new char[bannedWord.length()]).replace('\0', '*'));
         }
-
         System.out.println(text);
     }
 }
