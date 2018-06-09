@@ -1,44 +1,48 @@
+import java.io.BufferedReader;
+import java.io.IOException;
+import java.io.InputStreamReader;
 import java.util.*;
 
 public class VLogger {
+
     public static void main(String[] args) {
-
-        Scanner scanner = new Scanner(System.in);
-
-        String input = scanner.nextLine();
 
         Map<String, Vlogger> vloggers = new HashMap<>();
 
-        while (!input.equals("Statistics")) {
+        try (BufferedReader reader = new BufferedReader(new InputStreamReader(System.in))) {
 
-            String[] tokens = input.split(" ");
-            String username = tokens[0];
+            String input = reader.readLine();
 
-            if (!vloggers.containsKey(username) && tokens[1].equals("joined")) {
-                vloggers.put(username, new Vlogger(username));
+            while (!"Statistics".equalsIgnoreCase(input)) {
+                String[] tokens = input.split("\\s+");
+                String user = tokens[0];
+                if (!vloggers.containsKey(user) && "joined".equalsIgnoreCase(tokens[1])) {
+                    vloggers.put(user, new Vlogger(user));
+                } else if (vloggers.containsKey(user) && "followed".equalsIgnoreCase(tokens[1])) {
+                    String follow = tokens[2];
+                    if (vloggers.containsKey(follow) && !user.equals(follow)) {
+                        vloggers.get(follow).followers.add(user);
+                        vloggers.get(user).following.add(follow);
+                    }
+                }
+                input = reader.readLine();
             }
-            else if(vloggers.containsKey(username) && tokens[1].equals("followed")) {
-                String followedUser = tokens[2];
-                vloggers.get(username).followers.add(username);
-                vloggers.get(username).following.add(followedUser);
-            }
 
-            input = scanner.nextLine();
+            StringBuilder result = new StringBuilder();
+            result.append(String.format("The V-Logger has a total of %d vloggers in its logs.%n", vloggers.size()));
+            final int[] count = {1};
+            final boolean[] isFirst = {true};
+            vloggers.values().stream().sorted()
+                    .forEachOrdered(
+                            vlogger -> {
+                                result.append(String.format("%d%s", count[0]++, vlogger.getInfo(isFirst[0])));
+                                isFirst[0] = false;
+                            });
+
+            System.out.println(result);
+        } catch (IOException e) {
+            e.printStackTrace();
         }
-
-        StringBuilder result = new StringBuilder();
-        result.append(String.format("The V-Logger has a total of %d vloggers in its logs.%n", vloggers.size()));
-        final int[] count = {1};
-        final boolean[] isFirst = {true};
-
-        vloggers.values().stream().sorted()
-                .forEachOrdered(
-                        vlogger -> {
-                            result.append(String.format("%d%s", count[0]++, vlogger.getInfo(isFirst[0])));
-                            isFirst[0] = false;
-                        });
-
-        System.out.println(result);
     }
 
     private static class Vlogger implements Comparable<Vlogger> {
@@ -52,24 +56,24 @@ public class VLogger {
             following = new HashSet<>();
         }
 
-        String getInfo(boolean showFollowers){
+        String getInfo(boolean showFollowers) {
             StringBuilder sb = new StringBuilder();
             sb.append(String.format(". %s : %d followers, %d following%n", name, followers.size(), following.size()));
-            if(showFollowers){
-                for(String follower : followers){
-                    sb.append((String.format("*  %s%n", follower)));
+            if (showFollowers) {
+                for (String follower : followers) {
+                    sb.append(String.format("*  %s%n", follower));
                 }
             }
             return sb.toString();
         }
 
-        public int compareTo(Vlogger other){
+        @Override
+        public int compareTo(Vlogger other) {
             if (followers.size() != other.followers.size()) {
                 return Integer.compare(other.followers.size(), followers.size());
             }
 
             return Integer.compare(following.size(), other.following.size());
         }
-
     }
 }
